@@ -27,12 +27,16 @@ int main()
     Set *set = malloc(sizeof(Set) * numberOfSet);
 
     char str[50];
-    int i = 0;
+    int i = -1;
+    int num, element;
     while(fscanf(read, "%s", str) != EOF)
     {
+        char *remove_str = strtok(str, "{");
+        num = atoi(remove_str);
+
         if(strcmp(str,"set") == 0)
         {
-            if (i >= numberOfSet)
+            if (++i >= numberOfSet)
             {
                 numberOfSet++;
                 set = realloc(set, sizeof(Set) * numberOfSet);
@@ -40,10 +44,16 @@ int main()
 
             fscanf(read, "%s", str);
             strcpy(set[i].name,str);
+
+            element = 0;
         }
-        printf("%s\n", str);
+        else if(num != 0)
+        {
+            set[i].member[element++] = num;
+        }
     }
 
-    printf("%s", set[0].name);
+    printf("%s\n", set[1].name);
+    printf("%d\n",numberOfSet);
     return 0;
 }
