@@ -1,23 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+int difference(const int const set1[], int n1,  const int const set2[], int n2, int diff[]);
+int set_union(const int const set1[], int n1, const int const set2[], int n2, int uni[]);
+int intersection(const int const set1[], int n1, const int const set2[], int n2, int intsec[]);
 
-typedef struct Sets
+typedef struct SetInSet
 {
     char name[10];
-    int numberOfElement;
+    int size;
     int member[20];
-}Set;
+}SetInSet;
 
-typedef struct Combined_sets
+typedef struct Set
 {
-    Set set1;
-    Set set2;
+    SetInSet set1;
+    SetInSet set2;
     char name[10];
     char operator[2];
-    int numberOfElement;
-    int member[20];
-}Combined_set;
+    int size;
+    int *member;
+}Set;
 
 int main()
 {
@@ -28,7 +31,7 @@ int main()
 
     char str[50];
     int i = -1;
-    int num, element;
+    int num, size, mem_size = 5;
     while(fscanf(read, "%s", str) != EOF)
     {
         char *remove_str = strtok(str, "{");
@@ -36,6 +39,11 @@ int main()
 
         if(strcmp(str,"set") == 0)
         {
+            if (i >= 0)
+            {
+                set[i].size = size;
+            }
+
             if (++i >= numberOfSet)
             {
                 numberOfSet++;
@@ -45,15 +53,31 @@ int main()
             fscanf(read, "%s", str);
             strcpy(set[i].name,str);
 
-            element = 0;
+            set[i].member = (int *) malloc(sizeof(int) * mem_size);
+            size = 0;
         }
         else if(num != 0)
         {
-            set[i].member[element++] = num;
+            if(i >= mem_size)
+            {
+                mem_size += 5;
+                set[i].member = (int *) realloc(set[i].member, sizeof(int) * mem_size);
+            }
+            set[i].member[size++] = num;
         }
+        printf("%s\n",str);
     }
+    if(i >= mem_size)
+    {
+        set[i].member = (int *) realloc(set[i].member, sizeof(int) * mem_size);
+    }
+    set[i].size = size;
+
+    // Combined_set set3_union;
+    // strcpy(set3_union.operator, "U");
+    // set3_union.numberOfElement = set_union(set[2].member);
 
     printf("%s\n", set[1].name);
-    printf("%d\n",numberOfSet);
+    printf("%d\n",set[2].member[6]);
     return 0;
 }
